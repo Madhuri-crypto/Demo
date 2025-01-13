@@ -1,0 +1,40 @@
+# Vulnerable Python Script
+
+import os
+import sqlite3
+
+# 1. Hardcoded credentials
+username = "admin"
+password = "password123"
+
+def connect_to_database(db_name):
+    # 2. SQL Injection vulnerability
+    conn = sqlite3.connect(db_name)
+    return conn
+
+def get_user_data(conn, user_id):
+    cursor = conn.cursor()
+    # 3. SQL Injection vulnerability
+    query = f"SELECT * FROM users WHERE id = {user_id}"
+    cursor.execute(query)
+    return cursor.fetchall()
+
+def read_file(file_path):
+    # 4. Path Traversal vulnerability
+    with open(file_path, 'r') as file:
+        return file.read()
+
+def main():
+    db_name = "example.db"
+    conn = connect_to_database(db_name)
+    
+    user_id = input("Enter user ID: ")
+    user_data = get_user_data(conn, user_id)
+    print(user_data)
+    
+    file_path = input("Enter file path to read: ")
+    file_content = read_file(file_path)
+    print(file_content)
+
+if __name__ == "__main__":
+    main()
